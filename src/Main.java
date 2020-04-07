@@ -7,37 +7,36 @@
 /**
  *
  * @author Shuvo Podder
- */import java.io.BufferedReader;
+ */
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import java.awt.*;
-import java.io.*;
-import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 public class Main extends javax.swing.JFrame {
 
     /**
@@ -45,7 +44,7 @@ public class Main extends javax.swing.JFrame {
      */
     public Main() {
         initComponents();
-        
+
     }
 
     /**
@@ -58,32 +57,24 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        button1 = new java.awt.Button();
+        Graph = new java.awt.Button();
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         text = new javax.swing.JTextArea();
+        panelChart = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 153));
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        Graph.setLabel("Graph");
+        Graph.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        button1.setLabel("button1");
-        button1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                button1ActionPerformed(evt);
+                GraphActionPerformed(evt);
             }
         });
 
@@ -97,13 +88,6 @@ public class Main extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Mostly Common Word");
 
-        jButton3.setText("jButton3");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setText("Term Indexing Project");
 
@@ -111,24 +95,19 @@ public class Main extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(219, 219, 219)
+                        .addComponent(jLabel2))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addComponent(jLabel1)
                         .addGap(143, 143, 143)
-                        .addComponent(jButton2)
-                        .addGap(64, 234, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(219, 219, 219)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addComponent(jButton1)
-                .addGap(39, 39, 39))
+                        .addComponent(jButton2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Graph, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(134, 134, 134))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -136,38 +115,38 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addComponent(jLabel2))
-                            .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
+                        .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(jButton2)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton3))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(Graph, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Words", "Doc 1", "Doc 2", "Doc 3", "Doc 4", "Doc 5", "Doc 6", "Doc 7", "Doc 8"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(table);
 
         text.setColumns(20);
         text.setRows(5);
         jScrollPane3.setViewportView(text);
+
+        panelChart.setBackground(new java.awt.Color(0, 102, 255));
+        panelChart.setForeground(new java.awt.Color(51, 102, 255));
+        panelChart.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -182,7 +161,9 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 677, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addComponent(panelChart, javax.swing.GroupLayout.PREFERRED_SIZE, 698, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,70 +171,149 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE))
+                    .addComponent(panelChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(47, 47, 47))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
-        Graph obj =new Graph();
-        obj.setVisible(true);
-// TODO add your handling code here:
-    }//GEN-LAST:event_button1ActionPerformed
+    private void GraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GraphActionPerformed
+        panelChart.validate();// Graph obj =new Graph();
+        // obj.setVisible(true);
+        //JFreeChart chart = ChartFactory.createBarChart(null, "", "", dataset, PlotOrientation.VERTICAL, false, true, false );
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-File file = new File("C:\\Users\\Shuvo Podder\\Desktop\\test.txt"); 
-  BufferedReader br = null; 
-        try {
-            br = new BufferedReader(new FileReader(file));
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-  //String st;Stopword obj=new Stopword();
+        /* DefaultCategoryDataset barChartData=new DefaultCategoryDataset();
+         barChartData.setValue(2000,"Amount","Januray");
+         barChartData.setValue(2500,"Amount","Fanuray");
+         barChartData.setValue(3000,"Amount","Muray");
+         barChartData.setValue(200,"Amount","Januray");
+         barChartData.setValue(500,"Amount","Fanuray");
+         barChartData.setValue(300,"Amount","Muray");
+         barChartData.setValue(9000,"Amount","Januray");
+         barChartData.setValue(200,"Amount","Fanuray");
+         barChartData.setValue(3500,"Amount","Muray");
+         barChartData.setValue(1000,"Amount","Januray");
+         barChartData.setValue(1500,"Amount","Fanuray");
+         barChartData.setValue(7000,"Amount","Muray");
+         barChartData.setValue(2000,"Amount","Januray");
+         barChartData.setValue(2500,"Amount","Fanuray");
+         barChartData.setValue(3000,"Amount","Muray");*/
+        /*      String series1 = "Doc1";
+         String series2 = "Doc2";
+         String series3 = "Doc3";
+         String series4 = "Doc4";
+         DefaultCategoryDataset dataset=new DefaultCategoryDataset();
 
-       
-    }//GEN-LAST:event_jButton1ActionPerformed
+         dataset.addValue(5.0, series1, "string name");
+         dataset.addValue(4.8, series1, "2006");
+         dataset.addValue(4.5, series1, "2007");
+         dataset.addValue(4.3, series1, "2008");
+         dataset.addValue(4.0, series1, "2009");
+         dataset.addValue(4.1, series1, "2010");
+         dataset.addValue(4.2, series1, "2011");
+         dataset.addValue(4.2, series1, "2012");
+         dataset.addValue(4.0, series1, "2013");
+ 
+         dataset.addValue(4.0, series2, "2005");
+         dataset.addValue(4.2, series2, "2006");
+         dataset.addValue(3.8, series2, "2007");
+         dataset.addValue(3.6, series2, "2008");
+         dataset.addValue(3.4, series2, "2009");
+         dataset.addValue(3.4, series2, "2010");
+         dataset.addValue(3.3, series2, "2011");
+         dataset.addValue(3.1, series2, "2012");
+         dataset.addValue(3.2, series2, "2013");
+ 
+         dataset.addValue(3.6, series3, "2005");
+         dataset.addValue(3.4, series3, "2006");
+         dataset.addValue(3.5, series3, "2007");
+         dataset.addValue(3.2, series3, "2008");
+         dataset.addValue(3.2, series3, "2009");
+         dataset.addValue(3.0, series3, "2010");
+         dataset.addValue(2.8, series3, "2011");
+         dataset.addValue(2.8, series3, "2012");
+         dataset.addValue(2.6, series3, "2013");
+ 
+         dataset.addValue(3.2, series4, "2005");
+         dataset.addValue(3.2, series4, "2006");
+         dataset.addValue(3.0, series4, "2007");
+         dataset.addValue(3.0, series4, "2008");
+         dataset.addValue(2.8, series4, "2009");
+         dataset.addValue(2.7, series4, "2010");
+         dataset.addValue(2.6, series4, "2011");
+         dataset.addValue(2.6, series4, "2012");
+         dataset.addValue(2.4, series4, "2013");
+        
+         String chartTitle = "Word Distribution";
+         String categoryAxisLabel = "Words ";
+         String valueAxisLabel = "Frequency";
+         JFreeChart chart = ChartFactory.createLineChart(chartTitle, categoryAxisLabel, valueAxisLabel, dataset);
+         //  JFreeChart barChart=ChartFactory.createBarChart("Word Distribution","Monthly","Frequency",barChartData,PlotOrientation.VERTICAL,false,true,false);
+         // CategoryPlot barchrt=barChart.getCategoryPlot();
+         // barchrt.setRangeGridlinePaint(Color.ORANGE);
+        
+         ChartPanel barPanel=new ChartPanel(chart);//barChart
+        
+         panelChart.removeAll();
+         panelChart.add(barPanel,BorderLayout.CENTER);
+         panelChart.validate();
+         */
+
+    }//GEN-LAST:event_GraphActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
-        int count = 0,i = 1;
+        String chartTitle = "Word Distribution";
+        String categoryAxisLabel = "Words ";
+        String valueAxisLabel = "Frequency";
+        int count = 0, i = 1;
+        String series[] = new String[100];
         Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();//posting
+        
+        
+        
         Map<PackingListRow, Integer> items = new HashMap<PackingListRow, Integer>();//id
         HashMap<String, Integer> hm = new HashMap<>();//total frequency
-        List<String> ss=new ArrayList<String>();
-        File dir = new File("C:\\Users\\Shuvo Podder\\Desktop\\nlp");
-       // PrintWriter pw = new PrintWriter("output.txt");
+        List<String> ss = new ArrayList<String>();
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        File dir = new File("nlp");
+        // PrintWriter pw = new PrintWriter("output.txt");
         String[] fileNames = dir.list();
         for (String fileName : fileNames) {
 
             File f = new File(dir, fileName);
-      
+            series[i] = fileName;
+            
+
             String st = "";
             try {
-                 BufferedReader   br = new BufferedReader(new FileReader(f));
+                BufferedReader br = new BufferedReader(new FileReader(f));
                 while ((st = br.readLine()) != null) {
                     st = normalizeText(st);
+                    //System.out.println(st);
                     Pattern p = Pattern.compile("[a-zA-Z]+");
                     Matcher m = p.matcher(st.toLowerCase());
-                    
+
                     while (m.find()) {
                         String word = m.group(); //spilt word from sentense
                         if (!hm.containsKey(word)) {
                             hm.put(word, 1);
                            // dictionary.put(word, i); 
-                            
+
                         } else {
-                            hm.put(word, hm.get(word) + 1);                            
+                            hm.put(word, hm.get(word) + 1);
                         }
                         if (map.get(word) == null) {
-                            map.put(word, new ArrayList<Integer>());  
+                            map.put(word, new ArrayList<Integer>());
                         }
                         map.get(word).add(i);
-                        addItem(items, new PackingListRow(word, i), 1);               
+                        addItem(items, new PackingListRow(word, i), 1);
                     }
                 }
             } catch (IOException ex) {
@@ -264,18 +324,40 @@ File file = new File("C:\\Users\\Shuvo Podder\\Desktop\\test.txt");
 
         }
         removeDulpicate(map);//merge
-        map = Sort3(map);//sort
-        MostlyCommon(map, count,items,ss);//word matching
+       map = Sort3(map);//sort
+        MostlyCommon(map, count, items, ss);//word matching
         //Frequency(hm);
-        System.out.println(map);
-        System.out.println(items);
+        //System.out.println(map);
+        //System.out.println(items);
         //System.out.println("list:"+ ss);
         text.setText(ss.toString());
-    }//GEN-LAST:event_jButton2ActionPerformed
+              // ArrayList<User> list = getUsersList();
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        //text.setText("d");// TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+        //for(int q=0;q<5;q++){
+        //PackingListRow obj=new PackingListRow(ss.get(1),1);
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        Object[] row = new Object[count+1];
+        for (int ii = 0; ii < ss.size(); ii++) {
+
+            row[0] = ss.get(ii);
+            for (int j = 1; j < count + 1; j++) {
+                PackingListRow obj = new PackingListRow(ss.get(ii), j);
+                dataset.addValue(items.get(obj), series[j], ss.get(ii));
+                // System.out.println("Package:"+ss.get(ii)+"1:" +items.get(obj));
+                row[j] = items.get(obj);
+            }
+            model.addRow(row);
+        }
+       //Graph2 obj =new Graph2(dataset,chartTitle, categoryAxisLabel, valueAxisLabel);
+        //obj.setVisible(true);
+        JFreeChart chart = ChartFactory.createLineChart(chartTitle, categoryAxisLabel, valueAxisLabel, dataset);
+
+        ChartPanel barPanel = new ChartPanel(chart);
+
+        panelChart.removeAll();
+        panelChart.add(barPanel, BorderLayout.CENTER);
+        //panelChart.validate();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -304,7 +386,7 @@ File file = new File("C:\\Users\\Shuvo Podder\\Desktop\\test.txt");
         }
         //</editor-fold>
         /* Create and display the form */
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Main().setVisible(true);
@@ -313,40 +395,37 @@ File file = new File("C:\\Users\\Shuvo Podder\\Desktop\\test.txt");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.awt.Button button1;
-    private javax.swing.JButton jButton1;
+    private java.awt.Button Graph;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JPanel panelChart;
+    private javax.swing.JTable table;
     private javax.swing.JTextArea text;
     // End of variables declaration//GEN-END:variables
 
-     private static String normalizeText(String st) throws FileNotFoundException {
-        Scanner s = new Scanner(new File("C:\\Users\\Shuvo Podder\\Desktop\\Research\\default\\stopwords.txt"));
-        ArrayList<String> list = new ArrayList<String>();
+    private static String normalizeText(String str) throws FileNotFoundException {
+        Scanner s = new Scanner(new File("stopwords.txt"));
+        ArrayList<String> list2 = new ArrayList<String>();
         while (s.hasNext()) {
-            list.add(s.next());
+            list2.add(s.next());
         }
         s.close();
-        List<String> allWords = new ArrayList<>(Arrays.asList(st.toLowerCase().split(" ")));
-        allWords.removeAll(list);
+        List<String> allWords = new ArrayList<>(Arrays.asList(str.toLowerCase().split(" ")));
+        allWords.removeAll(list2);
         String result = String.join(" ", allWords);
         return result;
     }
 
-  
-
-    private static void MostlyCommon(Map<String, List<Integer>> map, int count, Map<PackingListRow, Integer> items,List<String> sss) {
-        Set< Map.Entry< String, List<Integer>>> st = map.entrySet();
+    private static void MostlyCommon(Map<String, List<Integer>> map, int count, Map<PackingListRow, Integer> items, List<String> sss) {
+        Set< Map.Entry< String, List<Integer>>> sst = map.entrySet();
 //System.out.println("count:"+count);
         int arr[][] = new int[map.size()][count + 1];
         int i = 0, j = 0;
-        for (Map.Entry< String, List<Integer>> me : st) {
+        for (Map.Entry< String, List<Integer>> me : sst) {
             //System.out.print(me.getKey() + ":");
             // System.out.println(me.getValue());
 
@@ -354,32 +433,27 @@ File file = new File("C:\\Users\\Shuvo Podder\\Desktop\\test.txt");
             Integer[] itemsArray = new Integer[stringList.size()];
             itemsArray = stringList.toArray(itemsArray);
 
-            for (Integer s : itemsArray) {
-                //System.out.print(s + " ");
-                // arr[i][j] = (int) s;
-                arr[i][s - 1] = 1; /*matrix           DOC1   Doc2   Doc3
-                                             
-                 word1   1      0       1
-                 word2   0      1       0
-                 word3   0      0       1
-                 */
+            for (Integer sw : itemsArray) {
+                arr[i][sw - 1] = 1;                                   //matrix  DOC1   Doc2   Doc3
+                j++;
+            }                                                        //word1    1      0       1
+            i++;                                                    // word2    0      1       0
+        }                                                           //word3     0      0       1
+                                                                    //word3     1      1       1
 
                 //System.out.println("arr: " + arr[i][s]);
-                j++;
-            }
-            i++;
-        }
+                
+           
+            
+        
         int arr2[] = new int[map.size()];
-        Boolean bool = false;
+      
         int x = 0, t = 0;
         for (i = 0; i < arr.length; i++) {
             for (j = 0; j < arr[i].length - 1; j++) {
                 System.out.print(arr[i][j] + " ");
                 if (arr[i][j] == 1) {
-                    bool = true;
                     t++;
-                } else {
-
                 }
             }
             if (t == count) {
@@ -390,18 +464,19 @@ File file = new File("C:\\Users\\Shuvo Podder\\Desktop\\test.txt");
             System.out.println(" ");
         }
         int y = 0, z = 0;
-        for (Map.Entry<String, List<Integer>> ss : map.entrySet()) {
+        for (Map.Entry<String, List<Integer>> ls : map.entrySet()) {
             if (y == arr2[z]) {
-                System.out.println("Mostly common  " + ss.getKey());
-                
-                sss.add(ss.getKey());
+                System.out.println("Mostly common  " + ls.getKey());
+
+                sss.add(ls.getKey());
                 z++;
-                PackingListRow obj=new PackingListRow(ss.getKey(),1);
-                System.out.println("Package:"+ss.getKey()+"1:" +items.get(obj));
+                PackingListRow obj = new PackingListRow(ls.getKey(), 1);
+                //System.out.println("Package:" + ss.getKey() + "1:" + items.get(obj));
             }
             y++;
         }
 
+       // ArrayList<User> list = getUsersList();
         /*int a=10,x=0;
          i=0;
          j=0;int arr2[]=new int[100];
@@ -419,26 +494,24 @@ File file = new File("C:\\Users\\Shuvo Podder\\Desktop\\test.txt");
 
     private static void removeDulpicate(Map<String, List<Integer>> map) {
 
-        Set< Map.Entry< String, List<Integer>>> sst = map.entrySet();
+        Set< Map.Entry< String, List<Integer>>> srr = map.entrySet();
 
-        for (Map.Entry< String, List<Integer>> mme : sst) {
-            List<Integer> list = new ArrayList<>(mme.getValue());
+        for (Map.Entry< String, List<Integer>> e : srr) {
+            List<Integer> list3 = new ArrayList<>(e.getValue());
 
-            List<Integer> newList = list.stream().distinct().collect(Collectors.toList());
+            List<Integer> newList = list3.stream().distinct().collect(Collectors.toList());
 
-            map.replace(mme.getKey(), newList);
+            map.replace(e.getKey(), newList);
 
         }
     }
 
-   
-
     private static Map<String, List<Integer>> Sort3(Map<String, List<Integer>> map) {
-        List<Map.Entry<String, List<Integer>>> list
+        List<Map.Entry<String, List<Integer>>> list4
                 = new LinkedList<Map.Entry<String, List<Integer>>>(map.entrySet());
 
         // Sort the list 
-        Collections.sort(list, new Comparator<Map.Entry<String, List<Integer>>>() {
+        Collections.sort(list4, new Comparator<Map.Entry<String, List<Integer>>>() {
             public int compare(Map.Entry<String, List<Integer>> o1,
                     Map.Entry<String, List<Integer>> o2) {
                 return (o1.getKey()).compareTo(o2.getKey());
@@ -447,7 +520,7 @@ File file = new File("C:\\Users\\Shuvo Podder\\Desktop\\test.txt");
 
         // put data from sorted list to hashmap  
         HashMap<String, List<Integer>> temp = new LinkedHashMap<String, List<Integer>>();
-        for (Map.Entry<String, List<Integer>> aa : list) {
+        for (Map.Entry<String, List<Integer>> aa : list4) {
             temp.put(aa.getKey(), aa.getValue());
         }
         return temp;
@@ -457,7 +530,7 @@ File file = new File("C:\\Users\\Shuvo Podder\\Desktop\\test.txt");
 
         Integer oldQuantity = items.get(row);
         items.put(row, oldQuantity == null ? quantity : quantity + oldQuantity);
-    
+
     }
 
 }
